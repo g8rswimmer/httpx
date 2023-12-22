@@ -9,7 +9,6 @@ The query schema is defined by the following structure.  This is used to validat
 |------------------|---------|----------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title            | string  | Y        | `title`            | The title of the schema.                                                                                                                                                                |
 | Description      | string  | N        | `description`      | Description of the request query parameters                                                                                                                                             |
-| Loose Validation | boolean | N        | `loose_validation` | This indicates that schema parameter validation will be "loose". Loose is defined by if there are more parameters than defined in the schema, it will still pass.   Default is `false`. |
 | Parameters       | object  | Y        | `parameters`       | This is an object map that defines the parameter and the properties that are assocaited with it.                                                                                        |
 
 ### Parameter Properties
@@ -33,7 +32,6 @@ The following are supported data types for the parameter properties:
 {
     "title": "Example Query Schema",
     "description": "This is an example of the query schema for the following query: ?last_name=Doe&first_name=John&married=true&age=34,children=David,Susan",
-    "loose_validation": false,
     "properties": {
         "first_name": {
             "description": "First Name of the person",
@@ -47,7 +45,8 @@ The following are supported data types for the parameter properties:
         },
         "married": {
             "description": "Is the person married",
-            "data_type": "boolean"
+            "data_type": "boolean",
+            "optional": true
         },
         "age": {
             "description": "The age of the person",
