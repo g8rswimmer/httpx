@@ -24,10 +24,9 @@ var dataTypes = map[string]struct{}{
 }
 
 type Schema struct {
-	Title           string                         `json:"title"`
-	Description     string                         `json:"description"`
-	LooseValidation bool                           `json:"loose_validation"`
-	Parameters      map[string]ParameterProperties `json:"parameters"`
+	Title       string                         `json:"title"`
+	Description string                         `json:"description"`
+	Parameters  map[string]ParameterProperties `json:"parameters"`
 }
 
 func (s Schema) Validate(req *http.Request) error {
@@ -35,8 +34,10 @@ func (s Schema) Validate(req *http.Request) error {
 	if err != nil {
 		return err
 	}
-	if len(q) > len(s.Parameters) && !s.LooseValidation {
-		return errors.New("")
+	for k := range q {
+		if _, has := s.Parameters[k]; !has {
+			return errors.New("")
+		}
 	}
 	for key, properties := range s.Parameters {
 		value := q.Get(key)
@@ -100,7 +101,7 @@ func SchemaModelValidator(schema Schema) error {
 	switch {
 	case len(schema.Title) == 0:
 		return errors.New("schema root title is required")
-	case !schema.LooseValidation && len(schema.Parameters) == 0:
+	case len(schema.Parameters) == 0:
 		return errors.New("schema parameters title is required")
 	default:
 	}
