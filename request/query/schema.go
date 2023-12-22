@@ -23,6 +23,20 @@ var dataTypes = map[string]struct{}{
 	DataTypeBoolean: {},
 }
 
+type SchemaError struct {
+	Msg         string                         `json:"message"`
+	MissingKeys []string                       `json:"missing_keys,omitempty"`
+	Properties  map[string]SchemaPropertyError `json:"properties,omitempty"`
+}
+
+func (s SchemaError) Error() string {
+	return s.Msg
+}
+
+type SchemaPropertyError struct {
+	Msg string `json:"message"`
+}
+
 type Schema struct {
 	Title       string                         `json:"title"`
 	Description string                         `json:"description"`
@@ -32,17 +46,30 @@ type Schema struct {
 func (s Schema) Validate(req *http.Request) error {
 	q, err := url.ParseQuery(req.URL.RawQuery)
 	if err != nil {
-		return err
-	}
-	for k := range q {
-		if _, has := s.Parameters[k]; !has {
-			return errors.New("")
+		return &SchemaError{
+			Msg: err.Error(),
 		}
 	}
+	missingKeys := []string{}
+	for k := range q {
+		if _, has := s.Parameters[k]; !has {
+			missingKeys = append(missingKeys, k)
+		}
+	}
+	propertyErrors := map[string]SchemaPropertyError{}
 	for key, properties := range s.Parameters {
 		value := q.Get(key)
 		if err := properties.Validate(value); err != nil {
-			return err
+			propertyErrors[key] = SchemaPropertyError{
+				Msg: err.Error(),
+			}
+		}
+	}
+	if len(missingKeys) > 0 || len(propertyErrors) > 0 {
+		return &SchemaError{
+			Msg:         "schema validation error",
+			MissingKeys: missingKeys,
+			Properties:  propertyErrors,
 		}
 	}
 	return nil
