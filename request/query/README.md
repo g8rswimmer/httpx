@@ -17,6 +17,7 @@ The query schema is defined by the following structure.  This is used to validat
 |------------------------|--------------------|------------------------------|--------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
 | Description            | string             | N                            | `description`            | Description of the request query parameters                                                                                            |
 | Example                | string             | N                            | `example`                | An example of common values for the parameter.                                                                                         |
+| Optional                | boolean             | N                            | `optional`                | If the parameter is optional.  If in the query it will be cheked, but will not fail if not |
 | Data Type              | string enumeration | Y                            | `data_type`              | The data type of the parameter.  While all parameters are "strings" in the query, this is the data type that it would be converted to. |
 | Inline Array           | boolean            | N                            | `inline_array`           | Some parameters may use a seperator to represent an array.  This is to indicate that the parameter value.                              |
 | Inline Array Seperator | string             | Y, if inline array is `true` | `inline_array_seperator` | The seperator used to seperate the array ellements.                                                                                    |
@@ -58,7 +59,8 @@ The following are supported data types for the parameter properties:
             "example": "Drew,Erin",
             "data_type": "string",
             "inline_array": true,
-            "inline_array_seperator": ","
+            "inline_array_seperator": ",",
+            "optional": true
         }
     }
 }

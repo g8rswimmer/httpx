@@ -185,3 +185,151 @@ func TestSchemaModelValidator(t *testing.T) {
 		})
 	}
 }
+
+func TestParameterProperties_Validate(t *testing.T) {
+	type fields struct {
+		Description          string
+		Example              string
+		DataType             string
+		InlineArray          bool
+		InlineArraySeperator string
+		Optional             bool
+	}
+	type args struct {
+		value string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "success: string",
+			fields: fields{
+				Description: "string test",
+				Example:     "none",
+				DataType:    DataTypeString,
+			},
+			args: args{
+				value: "some string",
+			},
+			wantErr: false,
+		},
+		{
+			name: "success: number",
+			fields: fields{
+				Description: "number test",
+				Example:     "none",
+				DataType:    DataTypeNumber,
+			},
+			args: args{
+				value: "42",
+			},
+			wantErr: false,
+		},
+		{
+			name: "success: boolean",
+			fields: fields{
+				Description: "boolean test",
+				Example:     "none",
+				DataType:    DataTypeBoolean,
+			},
+			args: args{
+				value: "true",
+			},
+			wantErr: false,
+		},
+		{
+			name: "success: optional with value",
+			fields: fields{
+				Description: "optional string test",
+				Example:     "none",
+				DataType:    DataTypeString,
+				Optional:    true,
+			},
+			args: args{
+				value: "some string",
+			},
+			wantErr: false,
+		},
+		{
+			name: "success: optional with no value",
+			fields: fields{
+				Description: "optional string test",
+				Example:     "none",
+				DataType:    DataTypeString,
+				Optional:    true,
+			},
+			args: args{
+				value: "",
+			},
+			wantErr: false,
+		},
+		{
+			name: "success: inline array number",
+			fields: fields{
+				Description:          "number array test",
+				Example:              "none",
+				DataType:             DataTypeNumber,
+				InlineArray:          true,
+				InlineArraySeperator: ",",
+			},
+			args: args{
+				value: "42,78",
+			},
+			wantErr: false,
+		},
+		{
+			name: "failure: required value",
+			fields: fields{
+				Description: "string test",
+				Example:     "none",
+				DataType:    DataTypeString,
+			},
+			args: args{
+				value: "",
+			},
+			wantErr: true,
+		},
+		{
+			name: "failure: number",
+			fields: fields{
+				Description: "number test",
+				Example:     "none",
+				DataType:    DataTypeNumber,
+			},
+			args: args{
+				value: "42xxx",
+			},
+			wantErr: true,
+		},
+		{
+			name: "failure: boolean",
+			fields: fields{
+				Description: "boolean test",
+				Example:     "none",
+				DataType:    DataTypeBoolean,
+			},
+			args: args{
+				value: "not",
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := ParameterProperties{
+				Description:          tt.fields.Description,
+				Example:              tt.fields.Example,
+				DataType:             tt.fields.DataType,
+				InlineArray:          tt.fields.InlineArray,
+				InlineArraySeperator: tt.fields.InlineArraySeperator,
+				Optional:             tt.fields.Optional,
+			}
+			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
+				t.Errorf("ParameterProperties.Validate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
