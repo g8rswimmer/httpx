@@ -33,6 +33,11 @@ func (s SchemaError) Error() string {
 	return s.Msg
 }
 
+func (s *SchemaError) Is(target error) bool {
+	_, ok := target.(*SchemaError)
+	return ok
+}
+
 type SchemaPropertyError struct {
 	Msg string `json:"message"`
 }
@@ -102,11 +107,11 @@ func (p ParameterProperties) Validate(value string) error {
 		case DataTypeString:
 		case DataTypeNumber:
 			if _, err := strconv.ParseFloat(v, 64); err != nil {
-				return fmt.Errorf("query value is not a number %s %w", v, err)
+				return fmt.Errorf("query value is not a number [%s] %w", v, err)
 			}
 		case DataTypeBoolean:
 			if _, err := strconv.ParseBool(v); err != nil {
-				return fmt.Errorf("query value is not a boolean %s %w", v, err)
+				return fmt.Errorf("query value is not a boolean [%s] %w", v, err)
 			}
 		}
 	}
