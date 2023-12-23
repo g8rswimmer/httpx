@@ -64,7 +64,7 @@ The following are supported data types for the parameter properties:
     }
 }
 ```
-## Code Example
+### Code Example
 ```go
 package main
 
@@ -154,4 +154,4 @@ func main() {
 	fmt.Println(string(enc))
 }
 ```
-This example can be found [here][../../_examples/request/query-schema/main.go]
+This example can be found [here](../../_examples/request/query-schema/main.go)
