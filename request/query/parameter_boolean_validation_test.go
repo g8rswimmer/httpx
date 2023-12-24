@@ -44,7 +44,7 @@ func TestParameterBooleanValidation_Validate_Value(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterBooleanValidation{
+			p := ParameterBooleanValidator{
 				Value: tt.fields.Value,
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
