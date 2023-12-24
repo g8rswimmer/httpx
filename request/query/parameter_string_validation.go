@@ -20,15 +20,15 @@ func (p ParameterStringValidation) Validate(value string) error {
 		return fmt.Errorf("value must be present")
 	}
 	if p.Value != nil && *p.Value != value {
-		return fmt.Errorf("query value [%s] does not equal %s", value, *p.Value)
+		return fmt.Errorf("value [%s] does not equal %s", value, *p.Value)
 	}
 	if p.RegEx != nil {
 		match, err := regexp.MatchString(*p.RegEx, value)
 		switch {
 		case err != nil:
-			return fmt.Errorf("query reg exp [%s] error %w", *p.RegEx, err)
+			return fmt.Errorf("reg exp [%s] error %w", *p.RegEx, err)
 		case !match:
-			return fmt.Errorf("query value [%s] does not match reg exp %s", value, *p.RegEx)
+			return fmt.Errorf("value [%s] does not match reg exp %s", value, *p.RegEx)
 		default:
 		}
 	}
@@ -40,5 +40,5 @@ func (p ParameterStringValidation) Validate(value string) error {
 			return nil
 		}
 	}
-	return fmt.Errorf("query value [%s] not in %v", value, p.OneOf)
+	return fmt.Errorf("value [%s] not in %v", value, p.OneOf)
 }
