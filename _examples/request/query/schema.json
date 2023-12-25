@@ -1,0 +1,54 @@
+{
+    "title": "Schema Example",
+    "description": "Overivew of the schema and validaiton for a HTTP request query",
+    "required_fields": {
+        "one_of": [
+            ["first_name", "last_name", "age"]
+        ]
+    },
+    "parameters": {
+        "first_name": {
+            "description": "This first name of a person with only string validation",
+            "example": "Gary",
+            "validation": {
+                "string_validator":{}
+            }
+        },
+        "last_name": {
+            "description": "This last name of a person with string value validation",
+            "example": "Smith",
+            "validation": {
+                "string_validator":{
+                    "value": "Smith"
+                }
+            }
+        },
+        "age": {
+            "description": "The age of the person with a range valiation",
+            "example": "29",
+            "validation": {
+                "number_validator":{
+                    "min": 18,
+                    "max": 100
+                }
+            }
+        },
+        "married": {
+            "description": "Optional parameter of if the person is marriged",
+            "example": "true",
+            "validation": {
+                "boolean_validator":{}
+            }
+        },
+        "children": {
+            "description": "If the person has any children",
+            "example": "Kim,Drew",
+            "inline_array": true,
+            "inline_array_seperator": ",",
+            "validation": {
+                "string_validator":{}
+            }
+        }
+    }
+    
+}

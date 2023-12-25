@@ -7,26 +7,15 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strconv"
-	"strings"
-)
 
-const (
-	DataTypeString  = "string"
-	DataTypeNumber  = "number"
-	DataTypeBoolean = "bool"
+	"github.com/g8rswimmer/httpx/request/field"
 )
-
-var dataTypes = map[string]struct{}{
-	DataTypeString:  {},
-	DataTypeNumber:  {},
-	DataTypeBoolean: {},
-}
 
 type SchemaError struct {
-	Msg         string                         `json:"message"`
-	MissingKeys []string                       `json:"missing_keys,omitempty"`
-	Properties  map[string]SchemaPropertyError `json:"properties,omitempty"`
+	Msg            string                         `json:"message"`
+	MissingFields  []string                       `json:"missing_fields,omitempty"`
+	RequiredFields string                         `json:"required_fields,omitempty"`
+	Properties     map[string]SchemaPropertyError `json:"properties,omitempty"`
 }
 
 func (s SchemaError) Error() string {
@@ -43,81 +32,66 @@ type SchemaPropertyError struct {
 }
 
 type Schema struct {
-	Title       string                         `json:"title"`
-	Description string                         `json:"description"`
-	Parameters  map[string]ParameterProperties `json:"parameters"`
+	Title          string                         `json:"title"`
+	Description    string                         `json:"description"`
+	RequiredFields field.Required                 `json:"required_fields"`
+	Parameters     map[string]ParameterProperties `json:"parameters"`
 }
 
 func (s Schema) Validate(req *http.Request) error {
-	q, err := url.ParseQuery(req.URL.RawQuery)
+	values, err := url.ParseQuery(req.URL.RawQuery)
 	if err != nil {
 		return &SchemaError{
 			Msg: err.Error(),
 		}
 	}
-	missingKeys := []string{}
-	for k := range q {
-		if _, has := s.Parameters[k]; !has {
-			missingKeys = append(missingKeys, k)
+	fields := fieldsFromValues(values)
+	missingFields := []string{}
+	for field := range fields {
+		if _, has := s.Parameters[field]; !has {
+			missingFields = append(missingFields, field)
 		}
 	}
+
+	requiredErr := s.RequiredFields.Validate(fields)
+
 	propertyErrors := map[string]SchemaPropertyError{}
 	for key, properties := range s.Parameters {
-		value := q.Get(key)
+		value := values.Get(key)
 		if err := properties.Validate(value); err != nil {
 			propertyErrors[key] = SchemaPropertyError{
 				Msg: err.Error(),
 			}
 		}
 	}
-	if len(missingKeys) > 0 || len(propertyErrors) > 0 {
-		return &SchemaError{
-			Msg:         "schema validation error",
-			MissingKeys: missingKeys,
-			Properties:  propertyErrors,
-		}
-	}
-	return nil
+	return handleValidationError(missingFields, propertyErrors, requiredErr)
 }
 
-type ParameterProperties struct {
-	Description          string `json:"description"`
-	Example              string `json:"example"`
-	DataType             string `json:"data_type"`
-	InlineArray          bool   `json:"inline_array"`
-	InlineArraySeperator string `json:"inline_array_seperator"`
-	Optional             bool   `json:"optional"`
-}
-
-func (p ParameterProperties) Validate(value string) error {
-	var values []string
-	switch {
-	case p.Optional && len(value) == 0:
+func handleValidationError(missingFields []string, propertyErrors map[string]SchemaPropertyError, requiredErr error) error {
+	if len(missingFields) == 0 && len(propertyErrors) == 0 && requiredErr == nil {
 		return nil
-	case len(value) == 0:
-		return fmt.Errorf("query value must be present")
-	case p.InlineArray:
-		values = strings.Split(value, p.InlineArraySeperator)
-	default:
-		values = []string{value}
 	}
-
-	for _, v := range values {
-		switch p.DataType {
-		case DataTypeString:
-		case DataTypeNumber:
-			if _, err := strconv.ParseFloat(v, 64); err != nil {
-				return fmt.Errorf("query value is not a number [%s] %w", v, err)
+	schemErr := &SchemaError{
+		Msg:           "schema validation error",
+		MissingFields: missingFields,
+		Properties:    propertyErrors,
+		RequiredFields: func() string {
+			if requiredErr == nil {
+				return ""
 			}
-		case DataTypeBoolean:
-			if _, err := strconv.ParseBool(v); err != nil {
-				return fmt.Errorf("query value is not a boolean [%s] %w", v, err)
-			}
-		}
+			return requiredErr.Error()
+		}(),
 	}
-	return nil
+	return schemErr
 }
 
+func fieldsFromValues(values url.Values) map[string]struct{} {
+	fields := map[string]struct{}{}
+	for field := range values {
+		fields[field] = struct{}{}
+	}
+	return fields
+}
 func SchemaFromJSON(reader io.Reader) (Schema, error) {
 	var schema Schema
 	if err := json.NewDecoder(reader).Decode(&schema); err != nil {
@@ -131,26 +105,19 @@ func SchemaFromJSON(reader io.Reader) (Schema, error) {
 
 func SchemaModelValidator(schema Schema) error {
 	switch {
-	case len(schema.Title) == 0:
-		return errors.New("schema root title is required")
 	case len(schema.Parameters) == 0:
 		return errors.New("schema parameters title is required")
 	default:
 	}
+	parameters := map[string]struct{}{}
 	for param, properties := range schema.Parameters {
 		if err := SchemaModelParameterPropertiesValidator(properties); err != nil {
 			return fmt.Errorf("schema parameter [%s]: %w", param, err)
 		}
+		parameters[param] = struct{}{}
 	}
-	return nil
-}
-
-func SchemaModelParameterPropertiesValidator(properties ParameterProperties) error {
-	if _, has := dataTypes[properties.DataType]; !has {
-		return fmt.Errorf("propoerties data type error: %s not found", properties.DataType)
-	}
-	if properties.InlineArray && len(properties.InlineArraySeperator) == 0 {
-		return errors.New("properties inline array requires a seperator")
+	if err := schema.RequiredFields.Validate(parameters); err != nil {
+		return fmt.Errorf("scheam required paramters missing: %w", err)
 	}
 	return nil
 }
