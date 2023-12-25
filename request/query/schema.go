@@ -79,8 +79,6 @@ func SchemaFromJSON(reader io.Reader) (Schema, error) {
 
 func SchemaModelValidator(schema Schema) error {
 	switch {
-	case len(schema.Title) == 0:
-		return errors.New("schema root title is required")
 	case len(schema.Parameters) == 0:
 		return errors.New("schema parameters title is required")
 	default:

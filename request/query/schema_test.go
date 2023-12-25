@@ -35,24 +35,6 @@ func TestSchemaModelValidator(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "fail: no title",
-			args: args{
-				schema: Schema{
-					Description: "test example",
-					Parameters: map[string]ParameterProperties{
-						"param1": {
-							Description: "None",
-							Example:     "Test",
-							Validation: ParameterValidation{
-								String: &ParameterStringValidator{},
-							},
-						},
-					},
-				},
-			},
-			wantErr: true,
-		},
-		{
 			name: "fail: no parameters",
 			args: args{
 				schema: Schema{
