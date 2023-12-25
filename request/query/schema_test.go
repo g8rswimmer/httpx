@@ -26,7 +26,7 @@ func TestSchemaModelValidator(t *testing.T) {
 							Description: "None",
 							Example:     "Test",
 							Validation: ParameterValidation{
-								String: &ParameterStringValidator{},
+								String: &QueryStringValidator{},
 							},
 						},
 					},
@@ -95,7 +95,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &ParameterStringValidator{},
+							String: &QueryStringValidator{},
 						},
 					},
 					"param2": {
@@ -147,7 +147,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &ParameterStringValidator{},
+							String: &QueryStringValidator{},
 						},
 					},
 					"param2": {
@@ -199,7 +199,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &ParameterStringValidator{},
+							String: &QueryStringValidator{},
 						},
 					},
 					"param2": {
@@ -252,7 +252,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &ParameterStringValidator{},
+							String: &QueryStringValidator{},
 						},
 					},
 					"param2": {

@@ -2,6 +2,8 @@ package query
 
 import (
 	"testing"
+
+	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
 func TestParameterStringValidation_Validate_Value(t *testing.T) {
@@ -46,8 +48,10 @@ func TestParameterStringValidation_Validate_Value(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterStringValidator{
-				Value: tt.fields.Value,
+			p := QueryStringValidator{
+				StringValidator: parameter.StringValidator{
+					Value: tt.fields.Value,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterStringValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -92,8 +96,10 @@ func TestParameterStringValidation_Validate_OneOf(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterStringValidator{
-				OneOf: tt.fields.OneOf,
+			p := QueryStringValidator{
+				StringValidator: parameter.StringValidator{
+					OneOf: tt.fields.OneOf,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterStringValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -119,7 +125,7 @@ func TestParameterStringValidation_Validate_RegEx(t *testing.T) {
 			name: "success: uuidv4",
 			fields: fields{
 				RegEx: func() *string {
-					s := RegExUUIDv4
+					s := parameter.RegExUUIDv4
 					return &s
 				}(),
 			},
@@ -132,7 +138,7 @@ func TestParameterStringValidation_Validate_RegEx(t *testing.T) {
 			name: "failure: uuidv4",
 			fields: fields{
 				RegEx: func() *string {
-					s := RegExUUIDv4
+					s := parameter.RegExUUIDv4
 					return &s
 				}(),
 			},
@@ -144,8 +150,10 @@ func TestParameterStringValidation_Validate_RegEx(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterStringValidator{
-				RegEx: tt.fields.RegEx,
+			p := QueryStringValidator{
+				StringValidator: parameter.StringValidator{
+					RegEx: tt.fields.RegEx,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterStringValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
