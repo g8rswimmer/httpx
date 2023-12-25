@@ -189,20 +189,6 @@ func TestParameterProperties_Validate(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failure: required value",
-			fields: fields{
-				Description: "string test",
-				Example:     "none",
-				Validation: ParameterValidation{
-					String: &StringValidator{},
-				},
-			},
-			args: args{
-				value: "",
-			},
-			wantErr: true,
-		},
-		{
 			name: "failure: number",
 			fields: fields{
 				Description: "number test",
@@ -238,7 +224,6 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Example:              tt.fields.Example,
 				InlineArray:          tt.fields.InlineArray,
 				InlineArraySeperator: tt.fields.InlineArraySeperator,
-				Optional:             tt.fields.Optional,
 				Validation:           tt.fields.Validation,
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {

@@ -72,9 +72,9 @@ func (p ParameterValidation) validator() error {
 }
 
 type ParameterProperties struct {
-	Description          string              `json:"description"`
-	Example              string              `json:"example"`
-	Optional             bool                `json:"optional"`
+	Description string `json:"description"`
+	Example     string `json:"example"`
+	// Optional             bool                `json:"optional"`
 	InlineArray          bool                `json:"inline_array"`
 	InlineArraySeperator string              `json:"inline_array_seperator"`
 	Validation           ParameterValidation `json:"validation"`
@@ -83,10 +83,8 @@ type ParameterProperties struct {
 func (p ParameterProperties) Validate(value string) error {
 	var values []string
 	switch {
-	case p.Optional && len(value) == 0:
-		return nil
 	case len(value) == 0:
-		return fmt.Errorf("query value must be present")
+		return nil
 	case p.InlineArray:
 		values = strings.Split(value, p.InlineArraySeperator)
 	default:

@@ -31,7 +31,6 @@
         "married": {
             "description": "Optional parameter of if the person is marriged",
             "example": "true",
-            "optional": true,
             "validation": {
                 "boolean_validator":{}
             }
@@ -39,7 +38,6 @@
         "children": {
             "description": "If the person has any children",
             "example": "Kim,Drew",
-            "optional": true,
             "inline_array": true,
             "inline_array_seperator": ",",
             "validation": {

@@ -160,7 +160,6 @@ func TestSchema_Validate(t *testing.T) {
 					"param3": {
 						Description: "Boolean",
 						Example:     "Test",
-						Optional:    true,
 						Validation: ParameterValidation{
 							Boolean: &BooleanValidator{},
 						},
