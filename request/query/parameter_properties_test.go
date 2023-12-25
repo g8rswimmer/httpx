@@ -3,6 +3,8 @@ package query
 import (
 	"testing"
 	"time"
+
+	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
 func TestSchemaModelParameterPropertiesValidator(t *testing.T) {
@@ -128,8 +130,10 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "time test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					Time: &ParameterTimeValidator{
-						Format: time.RFC3339,
+					Time: &QueryTimeValidator{
+						TimeValidator: parameter.TimeValidator{
+							Format: time.RFC3339,
+						},
 					},
 				},
 			},

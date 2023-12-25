@@ -3,6 +3,8 @@ package query
 import (
 	"testing"
 	"time"
+
+	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
 func TestParameterTimeValidation_Validate_Format(t *testing.T) {
@@ -41,8 +43,10 @@ func TestParameterTimeValidation_Validate_Format(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterTimeValidator{
-				Format: tt.fields.Format,
+			p := QueryTimeValidator{
+				TimeValidator: parameter.TimeValidator{
+					Format: tt.fields.Format,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterTimeValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -96,9 +100,11 @@ func TestParameterTimeValidation_Validate_Value(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterTimeValidator{
-				Format: tt.fields.Format,
-				Value:  tt.fields.Value,
+			p := QueryTimeValidator{
+				TimeValidator: parameter.TimeValidator{
+					Format: tt.fields.Format,
+					Value:  tt.fields.Value,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterTimeValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -152,9 +158,11 @@ func TestParameterTimeValidation_Validate_Before(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterTimeValidator{
-				Format: tt.fields.Format,
-				Before: tt.fields.Before,
+			p := QueryTimeValidator{
+				TimeValidator: parameter.TimeValidator{
+					Format: tt.fields.Format,
+					Before: tt.fields.Before,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterTimeValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -208,9 +216,11 @@ func TestParameterTimeValidation_Validate_After(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterTimeValidator{
-				Format: tt.fields.Format,
-				After:  tt.fields.After,
+			p := QueryTimeValidator{
+				TimeValidator: parameter.TimeValidator{
+					Format: tt.fields.Format,
+					After:  tt.fields.After,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterTimeValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
