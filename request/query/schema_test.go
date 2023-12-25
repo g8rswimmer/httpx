@@ -26,7 +26,7 @@ func TestSchemaModelValidator(t *testing.T) {
 							Description: "None",
 							Example:     "Test",
 							Validation: ParameterValidation{
-								String: &QueryStringValidator{},
+								String: &StringValidator{},
 							},
 						},
 					},
@@ -95,21 +95,21 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &QueryStringValidator{},
+							String: &StringValidator{},
 						},
 					},
 					"param2": {
 						Description: "Number",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Number: &QueryNumberValidator{},
+							Number: &NumberValidator{},
 						},
 					},
 					"param3": {
 						Description: "Boolean",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Boolean: &QueryBooleanValidator{},
+							Boolean: &BooleanValidator{},
 						},
 					},
 					"param4": {
@@ -118,7 +118,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &QueryNumberValidator{},
+							Number: &NumberValidator{},
 						},
 					},
 				},
@@ -147,14 +147,14 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &QueryStringValidator{},
+							String: &StringValidator{},
 						},
 					},
 					"param2": {
 						Description: "Number",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Number: &QueryNumberValidator{},
+							Number: &NumberValidator{},
 						},
 					},
 					"param3": {
@@ -162,7 +162,7 @@ func TestSchema_Validate(t *testing.T) {
 						Example:     "Test",
 						Optional:    true,
 						Validation: ParameterValidation{
-							Boolean: &QueryBooleanValidator{},
+							Boolean: &BooleanValidator{},
 						},
 					},
 					"param4": {
@@ -171,7 +171,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &QueryNumberValidator{},
+							Number: &NumberValidator{},
 						},
 					},
 				},
@@ -199,21 +199,21 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &QueryStringValidator{},
+							String: &StringValidator{},
 						},
 					},
 					"param2": {
 						Description: "Number",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Number: &QueryNumberValidator{},
+							Number: &NumberValidator{},
 						},
 					},
 					"param3": {
 						Description: "Boolean",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Boolean: &QueryBooleanValidator{},
+							Boolean: &BooleanValidator{},
 						},
 					},
 					"param4": {
@@ -222,7 +222,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &QueryNumberValidator{},
+							Number: &NumberValidator{},
 						},
 					},
 				},
@@ -252,21 +252,21 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &QueryStringValidator{},
+							String: &StringValidator{},
 						},
 					},
 					"param2": {
 						Description: "Number",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Number: &QueryNumberValidator{},
+							Number: &NumberValidator{},
 						},
 					},
 					"param3": {
 						Description: "Boolean",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Boolean: &QueryBooleanValidator{},
+							Boolean: &BooleanValidator{},
 						},
 					},
 					"param4": {
@@ -275,7 +275,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &QueryNumberValidator{},
+							Number: &NumberValidator{},
 						},
 					},
 				},

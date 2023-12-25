@@ -7,10 +7,10 @@ import (
 )
 
 type ParameterValidation struct {
-	String  *QueryStringValidator  `json:"string_validator"`
-	Number  *QueryNumberValidator  `json:"number_validator"`
-	Time    *QueryTimeValidator    `json:"time_validator"`
-	Boolean *QueryBooleanValidator `json:"boolean_validator"`
+	String  *StringValidator  `json:"string_validator"`
+	Number  *NumberValidator  `json:"number_validator"`
+	Time    *TimeValidator    `json:"time_validator"`
+	Boolean *BooleanValidator `json:"boolean_validator"`
 }
 
 func (p ParameterValidation) Validate(values []string) error {
@@ -74,9 +74,9 @@ func (p ParameterValidation) validator() error {
 type ParameterProperties struct {
 	Description          string              `json:"description"`
 	Example              string              `json:"example"`
+	Optional             bool                `json:"optional"`
 	InlineArray          bool                `json:"inline_array"`
 	InlineArraySeperator string              `json:"inline_array_seperator"`
-	Optional             bool                `json:"optional"`
 	Validation           ParameterValidation `json:"validation"`
 }
 

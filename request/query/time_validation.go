@@ -4,10 +4,10 @@ import (
 	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
-type QueryTimeValidator struct {
+type TimeValidator struct {
 	parameter.TimeValidator
 }
 
-func (p QueryTimeValidator) Validate(value string) error {
+func (p TimeValidator) Validate(value string) error {
 	return p.TimeValidator.Validate(value)
 }

@@ -43,7 +43,7 @@ func TestParameterTimeValidation_Validate_Format(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := QueryTimeValidator{
+			p := TimeValidator{
 				TimeValidator: parameter.TimeValidator{
 					Format: tt.fields.Format,
 				},
@@ -100,7 +100,7 @@ func TestParameterTimeValidation_Validate_Value(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := QueryTimeValidator{
+			p := TimeValidator{
 				TimeValidator: parameter.TimeValidator{
 					Format: tt.fields.Format,
 					Value:  tt.fields.Value,
@@ -158,7 +158,7 @@ func TestParameterTimeValidation_Validate_Before(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := QueryTimeValidator{
+			p := TimeValidator{
 				TimeValidator: parameter.TimeValidator{
 					Format: tt.fields.Format,
 					Before: tt.fields.Before,
@@ -216,7 +216,7 @@ func TestParameterTimeValidation_Validate_After(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := QueryTimeValidator{
+			p := TimeValidator{
 				TimeValidator: parameter.TimeValidator{
 					Format: tt.fields.Format,
 					After:  tt.fields.After,

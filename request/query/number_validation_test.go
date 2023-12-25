@@ -49,7 +49,7 @@ func TestParameterDataNumberValidation_Validate_Value(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := QueryNumberValidator{
+			p := NumberValidator{
 				NumberValidator: parameter.NumberValidator{
 					Value: tt.fields.Value,
 				},
@@ -164,7 +164,7 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := QueryNumberValidator{
+			p := NumberValidator{
 				NumberValidator: parameter.NumberValidator{
 					Min: tt.fields.Min,
 					Max: tt.fields.Max,
@@ -213,7 +213,7 @@ func TestParameterDataNumberValidation_Validate_OneOf(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := QueryNumberValidator{
+			p := NumberValidator{
 				NumberValidator: parameter.NumberValidator{
 					OneOf: tt.fields.OneOf,
 				},

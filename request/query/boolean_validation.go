@@ -7,11 +7,11 @@ import (
 	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
-type QueryBooleanValidator struct {
+type BooleanValidator struct {
 	parameter.BooleanValidator
 }
 
-func (p QueryBooleanValidator) Validate(value string) error {
+func (p BooleanValidator) Validate(value string) error {
 	b, err := strconv.ParseBool(value)
 	if err != nil {
 		return fmt.Errorf("query value is not a boolean [%s] %w", value, err)

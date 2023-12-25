@@ -61,7 +61,7 @@ func TestParameterBooleanValidation_Validate_Value(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := QueryBooleanValidator{
+			p := BooleanValidator{
 				BooleanValidator: parameter.BooleanValidator{
 					Value: tt.fields.Value,
 				},
