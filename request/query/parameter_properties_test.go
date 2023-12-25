@@ -114,7 +114,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "boolean test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					Boolean: &ParameterBooleanValidator{},
+					Boolean: &QueryBooleanValidator{},
 				},
 			},
 			args: args{
@@ -218,7 +218,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "boolean test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					Boolean: &ParameterBooleanValidator{},
+					Boolean: &QueryBooleanValidator{},
 				},
 			},
 			args: args{

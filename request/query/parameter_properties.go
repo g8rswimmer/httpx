@@ -11,7 +11,7 @@ type ParameterValidation struct {
 	String  *ParameterStringValidator     `json:"string_validator"`
 	Number  *ParameterDataNumberValidator `json:"number_validator"`
 	Time    *ParameterTimeValidator       `json:"time_validator"`
-	Boolean *ParameterBooleanValidator    `json:"boolean_validator"`
+	Boolean *QueryBooleanValidator        `json:"boolean_validator"`
 }
 
 func (p ParameterValidation) Validate(values []string) error {
@@ -37,11 +37,7 @@ func (p ParameterValidation) Validate(values []string) error {
 				return err
 			}
 		case p.Boolean != nil:
-			b, err := strconv.ParseBool(v)
-			if err != nil {
-				return fmt.Errorf("query value is not a boolean [%s] %w", v, err)
-			}
-			if err := p.Boolean.Validate(b); err != nil {
+			if err := p.Boolean.Validate(v); err != nil {
 				return err
 			}
 		default:

@@ -109,7 +109,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "Boolean",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Boolean: &ParameterBooleanValidator{},
+							Boolean: &QueryBooleanValidator{},
 						},
 					},
 					"param4": {
@@ -162,7 +162,7 @@ func TestSchema_Validate(t *testing.T) {
 						Example:     "Test",
 						Optional:    true,
 						Validation: ParameterValidation{
-							Boolean: &ParameterBooleanValidator{},
+							Boolean: &QueryBooleanValidator{},
 						},
 					},
 					"param4": {
@@ -213,7 +213,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "Boolean",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Boolean: &ParameterBooleanValidator{},
+							Boolean: &QueryBooleanValidator{},
 						},
 					},
 					"param4": {
@@ -266,7 +266,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "Boolean",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Boolean: &ParameterBooleanValidator{},
+							Boolean: &QueryBooleanValidator{},
 						},
 					},
 					"param4": {

@@ -2,15 +2,19 @@ package query
 
 import (
 	"fmt"
+	"strconv"
+
+	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
-type ParameterBooleanValidator struct {
-	Value *bool `json:"value"`
+type QueryBooleanValidator struct {
+	parameter.BooleanValidator
 }
 
-func (p ParameterBooleanValidator) Validate(value bool) error {
-	if p.Value != nil && *p.Value != value {
-		return fmt.Errorf("value [%v] does not equal %v", value, *p.Value)
+func (p QueryBooleanValidator) Validate(value string) error {
+	b, err := strconv.ParseBool(value)
+	if err != nil {
+		return fmt.Errorf("query value is not a boolean [%s] %w", value, err)
 	}
-	return nil
+	return p.BooleanValidator.Validate(b)
 }
