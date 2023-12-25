@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/g8rswimmer/httpx/request/field"
 )
 
 func TestSchemaModelValidator(t *testing.T) {
@@ -74,6 +76,7 @@ func TestSchema_Validate(t *testing.T) {
 	type fields struct {
 		Title       string
 		Description string
+		Required    field.Required
 		Parameters  map[string]ParameterProperties
 	}
 	type args struct {
@@ -90,6 +93,9 @@ func TestSchema_Validate(t *testing.T) {
 			fields: fields{
 				Title:       "Schema Test",
 				Description: "testing validation",
+				Required: field.Required{
+					OneOf: [][]string{{"param1", "param2", "param3", "param4"}},
+				},
 				Parameters: map[string]ParameterProperties{
 					"param1": {
 						Description: "String",
@@ -142,6 +148,9 @@ func TestSchema_Validate(t *testing.T) {
 			fields: fields{
 				Title:       "Schema Test",
 				Description: "testing validation",
+				Required: field.Required{
+					OneOf: [][]string{{"param1", "param2", "param4"}},
+				},
 				Parameters: map[string]ParameterProperties{
 					"param1": {
 						Description: "String",
@@ -187,6 +196,60 @@ func TestSchema_Validate(t *testing.T) {
 				}(),
 			},
 			wantErr: false,
+		},
+		{
+			name: "failure: required",
+			fields: fields{
+				Title:       "Schema Test",
+				Description: "testing validation",
+				Required: field.Required{
+					OneOf: [][]string{{"param1", "param2", "param3", "param4"}},
+				},
+				Parameters: map[string]ParameterProperties{
+					"param1": {
+						Description: "String",
+						Example:     "Test",
+						Validation: ParameterValidation{
+							String: &StringValidator{},
+						},
+					},
+					"param2": {
+						Description: "Number",
+						Example:     "Test",
+						Validation: ParameterValidation{
+							Number: &NumberValidator{},
+						},
+					},
+					"param3": {
+						Description: "Boolean",
+						Example:     "Test",
+						Validation: ParameterValidation{
+							Boolean: &BooleanValidator{},
+						},
+					},
+					"param4": {
+						Description:          "Number Array",
+						Example:              "Test",
+						InlineArray:          true,
+						InlineArraySeperator: ",",
+						Validation: ParameterValidation{
+							Number: &NumberValidator{},
+						},
+					},
+				},
+			},
+			args: args{
+				req: func() *http.Request {
+					r := httptest.NewRequest(http.MethodGet, "https://www.google.com", nil)
+					q := r.URL.Query()
+					q.Add("param1", "some string")
+					q.Add("param2", "42")
+					q.Add("param4", "13,55")
+					r.URL.RawQuery = q.Encode()
+					return r
+				}(),
+			},
+			wantErr: true,
 		},
 		{
 			name: "failure: request query paramters",
@@ -297,9 +360,10 @@ func TestSchema_Validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := Schema{
-				Title:       tt.fields.Title,
-				Description: tt.fields.Description,
-				Parameters:  tt.fields.Parameters,
+				Title:          tt.fields.Title,
+				Description:    tt.fields.Description,
+				RequiredFields: tt.fields.Required,
+				Parameters:     tt.fields.Parameters,
 			}
 			if err := s.Validate(tt.args.req); (err != nil) != tt.wantErr {
 				t.Errorf("Schema.Validate() error = %v, wantErr %v", err, tt.wantErr)

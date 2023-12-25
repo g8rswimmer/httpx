@@ -7,12 +7,15 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+
+	"github.com/g8rswimmer/httpx/request/field"
 )
 
 type SchemaError struct {
-	Msg         string                         `json:"message"`
-	MissingKeys []string                       `json:"missing_keys,omitempty"`
-	Properties  map[string]SchemaPropertyError `json:"properties,omitempty"`
+	Msg            string                         `json:"message"`
+	MissingFields  []string                       `json:"missing_fields,omitempty"`
+	RequiredFields string                         `json:"required_fields,omitempty"`
+	Properties     map[string]SchemaPropertyError `json:"properties,omitempty"`
 }
 
 func (s SchemaError) Error() string {
@@ -29,43 +32,66 @@ type SchemaPropertyError struct {
 }
 
 type Schema struct {
-	Title       string                         `json:"title"`
-	Description string                         `json:"description"`
-	Parameters  map[string]ParameterProperties `json:"parameters"`
+	Title          string                         `json:"title"`
+	Description    string                         `json:"description"`
+	RequiredFields field.Required                 `json:"required_fields"`
+	Parameters     map[string]ParameterProperties `json:"parameters"`
 }
 
 func (s Schema) Validate(req *http.Request) error {
-	q, err := url.ParseQuery(req.URL.RawQuery)
+	values, err := url.ParseQuery(req.URL.RawQuery)
 	if err != nil {
 		return &SchemaError{
 			Msg: err.Error(),
 		}
 	}
-	missingKeys := []string{}
-	for k := range q {
-		if _, has := s.Parameters[k]; !has {
-			missingKeys = append(missingKeys, k)
+	fields := fieldsFromValues(values)
+	missingFields := []string{}
+	for field := range fields {
+		if _, has := s.Parameters[field]; !has {
+			missingFields = append(missingFields, field)
 		}
 	}
+
+	requiredErr := s.RequiredFields.Validate(fields)
+
 	propertyErrors := map[string]SchemaPropertyError{}
 	for key, properties := range s.Parameters {
-		value := q.Get(key)
+		value := values.Get(key)
 		if err := properties.Validate(value); err != nil {
 			propertyErrors[key] = SchemaPropertyError{
 				Msg: err.Error(),
 			}
 		}
 	}
-	if len(missingKeys) > 0 || len(propertyErrors) > 0 {
-		return &SchemaError{
-			Msg:         "schema validation error",
-			MissingKeys: missingKeys,
-			Properties:  propertyErrors,
-		}
-	}
-	return nil
+	return handleValidationError(missingFields, propertyErrors, requiredErr)
 }
 
+func handleValidationError(missingFields []string, propertyErrors map[string]SchemaPropertyError, requiredErr error) error {
+	if len(missingFields) == 0 && len(propertyErrors) == 0 && requiredErr == nil {
+		return nil
+	}
+	schemErr := &SchemaError{
+		Msg:           "schema validation error",
+		MissingFields: missingFields,
+		Properties:    propertyErrors,
+		RequiredFields: func() string {
+			if requiredErr == nil {
+				return ""
+			}
+			return requiredErr.Error()
+		}(),
+	}
+	return schemErr
+}
+
+func fieldsFromValues(values url.Values) map[string]struct{} {
+	fields := map[string]struct{}{}
+	for field := range values {
+		fields[field] = struct{}{}
+	}
+	return fields
+}
 func SchemaFromJSON(reader io.Reader) (Schema, error) {
 	var schema Schema
 	if err := json.NewDecoder(reader).Decode(&schema); err != nil {
@@ -83,10 +109,15 @@ func SchemaModelValidator(schema Schema) error {
 		return errors.New("schema parameters title is required")
 	default:
 	}
+	parameters := map[string]struct{}{}
 	for param, properties := range schema.Parameters {
 		if err := SchemaModelParameterPropertiesValidator(properties); err != nil {
 			return fmt.Errorf("schema parameter [%s]: %w", param, err)
 		}
+		parameters[param] = struct{}{}
+	}
+	if err := schema.RequiredFields.Validate(parameters); err != nil {
+		return fmt.Errorf("scheam required paramters missing: %w", err)
 	}
 	return nil
 }

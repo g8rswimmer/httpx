@@ -1,6 +1,11 @@
 {
     "title": "Schema Example",
     "description": "Overivew of the schema and validaiton for a HTTP request query",
+    "required_fields": {
+        "one_of": [
+            ["first_name", "last_name", "age"]
+        ]
+    },
     "parameters": {
         "first_name": {
             "description": "This first name of a person with only string validation",
