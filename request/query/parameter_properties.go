@@ -3,15 +3,14 @@ package query
 import (
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 )
 
 type ParameterValidation struct {
-	String  *ParameterStringValidator     `json:"string_validator"`
-	Number  *ParameterDataNumberValidator `json:"number_validator"`
-	Time    *ParameterTimeValidator       `json:"time_validator"`
-	Boolean *QueryBooleanValidator        `json:"boolean_validator"`
+	String  *ParameterStringValidator `json:"string_validator"`
+	Number  *QueryNumberValidator     `json:"number_validator"`
+	Time    *ParameterTimeValidator   `json:"time_validator"`
+	Boolean *QueryBooleanValidator    `json:"boolean_validator"`
 }
 
 func (p ParameterValidation) Validate(values []string) error {
@@ -25,11 +24,7 @@ func (p ParameterValidation) Validate(values []string) error {
 				return err
 			}
 		case p.Number != nil:
-			n, err := strconv.ParseFloat(v, 64)
-			if err != nil {
-				return fmt.Errorf("query value is not a number [%s] %w", v, err)
-			}
-			if err := p.Number.Validate(n); err != nil {
+			if err := p.Number.Validate(v); err != nil {
 				return err
 			}
 		case p.Time != nil:

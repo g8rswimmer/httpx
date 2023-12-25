@@ -100,7 +100,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "number test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					Number: &ParameterDataNumberValidator{},
+					Number: &QueryNumberValidator{},
 				},
 			},
 			args: args{
@@ -176,7 +176,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				InlineArray:          true,
 				InlineArraySeperator: ",",
 				Validation: ParameterValidation{
-					Number: &ParameterDataNumberValidator{},
+					Number: &QueryNumberValidator{},
 				},
 			},
 			args: args{
@@ -204,7 +204,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "number test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					Number: &ParameterDataNumberValidator{},
+					Number: &QueryNumberValidator{},
 				},
 			},
 			args: args{

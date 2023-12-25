@@ -102,7 +102,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "Number",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Number: &ParameterDataNumberValidator{},
+							Number: &QueryNumberValidator{},
 						},
 					},
 					"param3": {
@@ -118,7 +118,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &ParameterDataNumberValidator{},
+							Number: &QueryNumberValidator{},
 						},
 					},
 				},
@@ -154,7 +154,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "Number",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Number: &ParameterDataNumberValidator{},
+							Number: &QueryNumberValidator{},
 						},
 					},
 					"param3": {
@@ -171,7 +171,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &ParameterDataNumberValidator{},
+							Number: &QueryNumberValidator{},
 						},
 					},
 				},
@@ -206,7 +206,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "Number",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Number: &ParameterDataNumberValidator{},
+							Number: &QueryNumberValidator{},
 						},
 					},
 					"param3": {
@@ -222,7 +222,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &ParameterDataNumberValidator{},
+							Number: &QueryNumberValidator{},
 						},
 					},
 				},
@@ -259,7 +259,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "Number",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							Number: &ParameterDataNumberValidator{},
+							Number: &QueryNumberValidator{},
 						},
 					},
 					"param3": {
@@ -275,7 +275,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &ParameterDataNumberValidator{},
+							Number: &QueryNumberValidator{},
 						},
 					},
 				},

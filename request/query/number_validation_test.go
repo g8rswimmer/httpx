@@ -2,6 +2,8 @@ package query
 
 import (
 	"testing"
+
+	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
 func TestParameterDataNumberValidation_Validate_Value(t *testing.T) {
@@ -10,7 +12,7 @@ func TestParameterDataNumberValidation_Validate_Value(t *testing.T) {
 		Value *float64
 	}
 	type args struct {
-		value float64
+		value string
 	}
 	tests := []struct {
 		name    string
@@ -27,7 +29,7 @@ func TestParameterDataNumberValidation_Validate_Value(t *testing.T) {
 				}(),
 			},
 			args: args{
-				value: 34.0,
+				value: "34.0",
 			},
 			wantErr: false,
 		},
@@ -40,15 +42,17 @@ func TestParameterDataNumberValidation_Validate_Value(t *testing.T) {
 				}(),
 			},
 			args: args{
-				value: 34,
+				value: "34",
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterDataNumberValidator{
-				Value: tt.fields.Value,
+			p := QueryNumberValidator{
+				NumberValidator: parameter.NumberValidator{
+					Value: tt.fields.Value,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterDataNumberValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -63,7 +67,7 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 		Max *float64
 	}
 	type args struct {
-		value float64
+		value string
 	}
 	tests := []struct {
 		name    string
@@ -80,7 +84,7 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 				}(),
 			},
 			args: args{
-				value: 12,
+				value: "12",
 			},
 			wantErr: false,
 		},
@@ -93,7 +97,7 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 				}(),
 			},
 			args: args{
-				value: 6,
+				value: "6",
 			},
 			wantErr: false,
 		},
@@ -110,7 +114,7 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 				}(),
 			},
 			args: args{
-				value: 6,
+				value: "6",
 			},
 			wantErr: false,
 		},
@@ -123,7 +127,7 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 				}(),
 			},
 			args: args{
-				value: 9,
+				value: "9",
 			},
 			wantErr: true,
 		},
@@ -136,7 +140,7 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 				}(),
 			},
 			args: args{
-				value: 16,
+				value: "16",
 			},
 			wantErr: true,
 		},
@@ -153,16 +157,18 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 				}(),
 			},
 			args: args{
-				value: 116,
+				value: "116",
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterDataNumberValidator{
-				Min: tt.fields.Min,
-				Max: tt.fields.Max,
+			p := QueryNumberValidator{
+				NumberValidator: parameter.NumberValidator{
+					Min: tt.fields.Min,
+					Max: tt.fields.Max,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterDataNumberValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -176,7 +182,7 @@ func TestParameterDataNumberValidation_Validate_OneOf(t *testing.T) {
 		OneOf []float64
 	}
 	type args struct {
-		value float64
+		value string
 	}
 	tests := []struct {
 		name    string
@@ -190,7 +196,7 @@ func TestParameterDataNumberValidation_Validate_OneOf(t *testing.T) {
 				OneOf: []float64{10.0, 34.0},
 			},
 			args: args{
-				value: 34,
+				value: "34",
 			},
 			wantErr: false,
 		},
@@ -200,15 +206,17 @@ func TestParameterDataNumberValidation_Validate_OneOf(t *testing.T) {
 				OneOf: []float64{10.0, 34.0},
 			},
 			args: args{
-				value: 38,
+				value: "38",
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterDataNumberValidator{
-				OneOf: tt.fields.OneOf,
+			p := QueryNumberValidator{
+				NumberValidator: parameter.NumberValidator{
+					OneOf: tt.fields.OneOf,
+				},
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
 				t.Errorf("ParameterDataNumberValidation.Validate() error = %v, wantErr %v", err, tt.wantErr)
