@@ -9,13 +9,13 @@ const (
 	RegExUUIDv4 = "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$"
 )
 
-type ParameterStringValidator struct {
+type StringValidator struct {
 	Value *string  `json:"value"`
 	RegEx *string  `json:"regex"`
 	OneOf []string `json:"one_of"`
 }
 
-func (p ParameterStringValidator) Validate(value string) error {
+func (p StringValidator) Validate(value string) error {
 	if len(value) == 0 {
 		return fmt.Errorf("value must be present")
 	}

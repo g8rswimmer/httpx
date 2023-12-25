@@ -6,14 +6,14 @@ import (
 	"time"
 )
 
-type ParameterTimeValidator struct {
+type TimeValidator struct {
 	Format string  `json:"format"`
 	Value  *string `json:"value"`
 	Before *string `json:"before"`
 	After  *string `json:"after"`
 }
 
-func (p ParameterTimeValidator) Validate(value string) error {
+func (p TimeValidator) Validate(value string) error {
 	if len(p.Format) == 0 {
 		return errors.New("time format is required")
 	}

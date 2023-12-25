@@ -47,7 +47,7 @@ func TestParameterDataNumberValidation_Validate_Value(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterDataNumberValidator{
+			p := NumberValidator{
 				Value: tt.fields.Value,
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
@@ -160,7 +160,7 @@ func TestParameterDataNumberValidation_Validate_Min_Max(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterDataNumberValidator{
+			p := NumberValidator{
 				Min: tt.fields.Min,
 				Max: tt.fields.Max,
 			}
@@ -207,7 +207,7 @@ func TestParameterDataNumberValidation_Validate_OneOf(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterDataNumberValidator{
+			p := NumberValidator{
 				OneOf: tt.fields.OneOf,
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {

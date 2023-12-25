@@ -46,7 +46,7 @@ func TestParameterStringValidation_Validate_Value(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterStringValidator{
+			p := StringValidator{
 				Value: tt.fields.Value,
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
@@ -92,7 +92,7 @@ func TestParameterStringValidation_Validate_OneOf(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterStringValidator{
+			p := StringValidator{
 				OneOf: tt.fields.OneOf,
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
@@ -144,7 +144,7 @@ func TestParameterStringValidation_Validate_RegEx(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParameterStringValidator{
+			p := StringValidator{
 				RegEx: tt.fields.RegEx,
 			}
 			if err := p.Validate(tt.args.value); (err != nil) != tt.wantErr {
