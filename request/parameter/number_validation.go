@@ -5,7 +5,7 @@ import (
 )
 
 type NumberValidator struct {
-	Value *float64
+	Value *float64  `json:"value"`
 	Min   *float64  `json:"min"`
 	Max   *float64  `json:"max"`
 	OneOf []float64 `json:"one_of"`
