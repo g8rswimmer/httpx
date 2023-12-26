@@ -72,9 +72,8 @@ func (p ParameterValidation) validator() error {
 }
 
 type ParameterProperties struct {
-	Description string `json:"description"`
-	Example     string `json:"example"`
-	// Optional             bool                `json:"optional"`
+	Description          string              `json:"description"`
+	Example              string              `json:"example"`
 	InlineArray          bool                `json:"inline_array"`
 	InlineArraySeperator string              `json:"inline_array_seperator"`
 	Validation           ParameterValidation `json:"validation"`
