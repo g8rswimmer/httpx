@@ -9,6 +9,19 @@ import (
 	"strings"
 )
 
+type SchemaError struct {
+	Msg string `json:"message"`
+}
+
+func (s SchemaError) Error() string {
+	return s.Msg
+}
+
+func (s *SchemaError) Is(target error) bool {
+	_, ok := target.(*SchemaError)
+	return ok
+}
+
 type Schema struct {
 	Title         string                  `json:"title"`
 	Description   string                  `json:"description"`
@@ -19,22 +32,30 @@ type Schema struct {
 
 func (s Schema) Validate(req *http.Request) error {
 	if req.Method != s.Method {
-		return fmt.Errorf("request method [%s] does not match expected method [%s]", req.Method, s.Method)
+		return &SchemaError{
+			Msg: fmt.Sprintf("request method [%s] does not match expected method [%s]", req.Method, s.Method),
+		}
 	}
 	reqPaths := strings.Split(req.URL.Path, "/")
 	schemaPaths := strings.Split(s.Endpoint, "/")
 	if len(reqPaths) != len(schemaPaths) {
-		return fmt.Errorf("request paths do not match")
+		return &SchemaError{
+			Msg: "request paths sizedo not match",
+		}
 	}
 	for i := range schemaPaths {
 		if pv, has := s.PathVariables[schemaPaths[i]]; has {
 			if err := pv.Validate(reqPaths[i]); err != nil {
-				return err
+				return &SchemaError{
+					Msg: fmt.Sprintf("path variable [%s]: %s", reqPaths[i], err.Error()),
+				}
 			}
 			continue
 		}
 		if schemaPaths[i] != reqPaths[i] {
-			return fmt.Errorf("request path [%s] does not match [%s]", reqPaths[i], schemaPaths[i])
+			return &SchemaError{
+				Msg: fmt.Sprintf("request path [%s] does not match [%s]", reqPaths[i], schemaPaths[i]),
+			}
 		}
 	}
 	return nil
