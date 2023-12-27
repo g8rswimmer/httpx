@@ -130,10 +130,8 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "time test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					Time: &TimeValidator{
-						TimeValidator: parameter.TimeValidator{
-							Format: time.RFC3339,
-						},
+					Time: &parameter.TimeValidator{
+						Format: time.RFC3339,
 					},
 				},
 			},

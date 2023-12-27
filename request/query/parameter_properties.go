@@ -11,7 +11,7 @@ import (
 type ParameterValidation struct {
 	String  *parameter.StringValidator `json:"string_validator"`
 	Number  *NumberValidator           `json:"number_validator"`
-	Time    *TimeValidator             `json:"time_validator"`
+	Time    *parameter.TimeValidator   `json:"time_validator"`
 	Boolean *BooleanValidator          `json:"boolean_validator"`
 }
 
