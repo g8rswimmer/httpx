@@ -1,0 +1,15 @@
+{
+    "title": "Endpoint Example",
+    "description": "Endpoint example schema with path variables",
+    "method": "GET",
+    "endpoint": "/schema/example/{id}",
+    "path_variables": {
+        "{id}": {
+            "validation": {
+                "string_validator": {
+                    "regex": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$"
+                }
+            }
+        }
+    }
+}

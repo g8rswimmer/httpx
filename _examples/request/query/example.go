@@ -18,8 +18,8 @@ func main() {
 	}
 	defer f.Close()
 
-	var schema query.Schema
-	if err := json.NewDecoder(f).Decode(&schema); err != nil {
+	schema, err := query.SchemaFromJSON(f)
+	if err != nil {
 		panic(err)
 	}
 
