@@ -71,6 +71,84 @@ func TestSchema_Validate(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "failure: equals",
+			fields: fields{
+				Title:       "test",
+				Description: "testing endpoint schema valiation",
+				Method:      http.MethodGet,
+				Endpoint:    "/success/test",
+			},
+			args: args{
+				req: func() *http.Request {
+					r := httptest.NewRequest(http.MethodGet, "https://www.schema.com/failure/test", nil)
+					return r
+				}(),
+			},
+			wantErr: true,
+		},
+		{
+			name: "failure: variable",
+			fields: fields{
+				Title:       "test",
+				Description: "testing endpoint schema valiation",
+				Method:      http.MethodGet,
+				Endpoint:    "/success/test/{id}",
+				PathVariables: map[string]PathVariable{
+					"{id}": {
+						Validation: VariableValidation{
+							String: &StringValidator{
+								StringValidator: parameter.StringValidator{
+									RegEx: func() *string {
+										s := parameter.RegExUUIDv4
+										return &s
+									}(),
+								},
+							},
+						},
+					},
+				},
+			},
+			args: args{
+				req: func() *http.Request {
+					r := httptest.NewRequest(http.MethodGet, "https://www.schema.com/success/test/no-id", nil)
+					return r
+				}(),
+			},
+			wantErr: true,
+		},
+		{
+			name: "failure: method",
+			fields: fields{
+				Title:       "test",
+				Description: "testing endpoint schema valiation",
+				Method:      http.MethodGet,
+				Endpoint:    "/success/test",
+			},
+			args: args{
+				req: func() *http.Request {
+					r := httptest.NewRequest(http.MethodPost, "https://www.schema.com/success/test", nil)
+					return r
+				}(),
+			},
+			wantErr: true,
+		},
+		{
+			name: "failure: path length",
+			fields: fields{
+				Title:       "test",
+				Description: "testing endpoint schema valiation",
+				Method:      http.MethodGet,
+				Endpoint:    "/success/test",
+			},
+			args: args{
+				req: func() *http.Request {
+					r := httptest.NewRequest(http.MethodGet, "https://www.schema.com/success/test/extra", nil)
+					return r
+				}(),
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

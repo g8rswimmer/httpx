@@ -34,7 +34,7 @@ func TestNumberValidation_Validate_Value(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failure",
+			name: "failure: validation",
 			fields: fields{
 				Value: func() *float64 {
 					n := 64.0
@@ -43,6 +43,19 @@ func TestNumberValidation_Validate_Value(t *testing.T) {
 			},
 			args: args{
 				value: "34",
+			},
+			wantErr: true,
+		},
+		{
+			name: "failure: NaN",
+			fields: fields{
+				Value: func() *float64 {
+					n := 64.0
+					return &n
+				}(),
+			},
+			args: args{
+				value: "not a number",
 			},
 			wantErr: true,
 		},
