@@ -4,13 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
 type ParameterValidation struct {
-	String  *StringValidator  `json:"string_validator"`
-	Number  *NumberValidator  `json:"number_validator"`
-	Time    *TimeValidator    `json:"time_validator"`
-	Boolean *BooleanValidator `json:"boolean_validator"`
+	String  *parameter.StringValidator `json:"string_validator"`
+	Number  *NumberValidator           `json:"number_validator"`
+	Time    *TimeValidator             `json:"time_validator"`
+	Boolean *BooleanValidator          `json:"boolean_validator"`
 }
 
 func (p ParameterValidation) Validate(values []string) error {

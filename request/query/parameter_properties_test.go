@@ -23,7 +23,7 @@ func TestSchemaModelParameterPropertiesValidator(t *testing.T) {
 					Description: "None",
 					Example:     "Test",
 					Validation: ParameterValidation{
-						String: &StringValidator{},
+						String: &parameter.StringValidator{},
 					},
 				},
 			},
@@ -47,7 +47,7 @@ func TestSchemaModelParameterPropertiesValidator(t *testing.T) {
 					Example:     "Test",
 					InlineArray: true,
 					Validation: ParameterValidation{
-						String: &StringValidator{},
+						String: &parameter.StringValidator{},
 					},
 				},
 			},
@@ -88,7 +88,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "string test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					String: &StringValidator{},
+					String: &parameter.StringValidator{},
 				},
 			},
 			args: args{
@@ -149,7 +149,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Example:     "none",
 				Optional:    true,
 				Validation: ParameterValidation{
-					String: &StringValidator{},
+					String: &parameter.StringValidator{},
 				},
 			},
 			args: args{
@@ -164,7 +164,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Example:     "none",
 				Optional:    true,
 				Validation: ParameterValidation{
-					String: &StringValidator{},
+					String: &parameter.StringValidator{},
 				},
 			},
 			args: args{
