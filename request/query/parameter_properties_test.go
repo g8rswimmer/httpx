@@ -23,7 +23,7 @@ func TestSchemaModelParameterPropertiesValidator(t *testing.T) {
 					Description: "None",
 					Example:     "Test",
 					Validation: ParameterValidation{
-						String: &StringValidator{},
+						String: &parameter.StringValidator{},
 					},
 				},
 			},
@@ -47,7 +47,7 @@ func TestSchemaModelParameterPropertiesValidator(t *testing.T) {
 					Example:     "Test",
 					InlineArray: true,
 					Validation: ParameterValidation{
-						String: &StringValidator{},
+						String: &parameter.StringValidator{},
 					},
 				},
 			},
@@ -70,7 +70,6 @@ func TestParameterProperties_Validate(t *testing.T) {
 		DataType             string
 		InlineArray          bool
 		InlineArraySeperator string
-		Optional             bool
 		Validation           ParameterValidation
 	}
 	type args struct {
@@ -88,11 +87,27 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "string test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					String: &StringValidator{},
+					String: &parameter.StringValidator{},
 				},
 			},
 			args: args{
 				value: "some string",
+			},
+			wantErr: false,
+		},
+		{
+			name: "success: string array",
+			fields: fields{
+				Description:          "string test",
+				Example:              "none",
+				InlineArray:          true,
+				InlineArraySeperator: ",",
+				Validation: ParameterValidation{
+					StringArray: &parameter.StringArrayValidator{},
+				},
+			},
+			args: args{
+				value: "some string,hello",
 			},
 			wantErr: false,
 		},
@@ -107,6 +122,22 @@ func TestParameterProperties_Validate(t *testing.T) {
 			},
 			args: args{
 				value: "42",
+			},
+			wantErr: false,
+		},
+		{
+			name: "success: number array",
+			fields: fields{
+				Description:          "number test",
+				Example:              "none",
+				InlineArray:          true,
+				InlineArraySeperator: ",",
+				Validation: ParameterValidation{
+					NumberArray: &NumberArrayValidator{},
+				},
+			},
+			args: args{
+				value: "42,88",
 			},
 			wantErr: false,
 		},
@@ -130,10 +161,8 @@ func TestParameterProperties_Validate(t *testing.T) {
 				Description: "time test",
 				Example:     "none",
 				Validation: ParameterValidation{
-					Time: &TimeValidator{
-						TimeValidator: parameter.TimeValidator{
-							Format: time.RFC3339,
-						},
+					Time: &parameter.TimeValidator{
+						Format: time.RFC3339,
 					},
 				},
 			},
@@ -143,13 +172,30 @@ func TestParameterProperties_Validate(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name: "success: time",
+			fields: fields{
+				Description:          "time test",
+				Example:              "none",
+				InlineArray:          true,
+				InlineArraySeperator: ",",
+				Validation: ParameterValidation{
+					TimeArray: &parameter.TimeArrayValidator{
+						Format: time.RFC3339,
+					},
+				},
+			},
+			args: args{
+				value: "2023-10-12T07:20:50.52Z,2025-10-12T07:20:50.52Z",
+			},
+			wantErr: false,
+		},
+		{
 			name: "success: optional with value",
 			fields: fields{
 				Description: "optional string test",
 				Example:     "none",
-				Optional:    true,
 				Validation: ParameterValidation{
-					String: &StringValidator{},
+					String: &parameter.StringValidator{},
 				},
 			},
 			args: args{
@@ -162,9 +208,8 @@ func TestParameterProperties_Validate(t *testing.T) {
 			fields: fields{
 				Description: "optional string test",
 				Example:     "none",
-				Optional:    true,
 				Validation: ParameterValidation{
-					String: &StringValidator{},
+					String: &parameter.StringValidator{},
 				},
 			},
 			args: args{
@@ -180,7 +225,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				InlineArray:          true,
 				InlineArraySeperator: ",",
 				Validation: ParameterValidation{
-					Number: &NumberValidator{},
+					NumberArray: &NumberArrayValidator{},
 				},
 			},
 			args: args{
@@ -199,6 +244,22 @@ func TestParameterProperties_Validate(t *testing.T) {
 			},
 			args: args{
 				value: "42xxx",
+			},
+			wantErr: true,
+		},
+		{
+			name: "failure: number array",
+			fields: fields{
+				Description:          "number test",
+				Example:              "none",
+				InlineArray:          true,
+				InlineArraySeperator: ",",
+				Validation: ParameterValidation{
+					NumberArray: &NumberArrayValidator{},
+				},
+			},
+			args: args{
+				value: "42xxx,55",
 			},
 			wantErr: true,
 		},

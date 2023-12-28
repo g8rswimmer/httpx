@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/g8rswimmer/httpx/request/field"
+	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
 func TestSchemaModelValidator(t *testing.T) {
@@ -28,7 +29,7 @@ func TestSchemaModelValidator(t *testing.T) {
 							Description: "None",
 							Example:     "Test",
 							Validation: ParameterValidation{
-								String: &StringValidator{},
+								String: &parameter.StringValidator{},
 							},
 						},
 					},
@@ -101,7 +102,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &StringValidator{},
+							String: &parameter.StringValidator{},
 						},
 					},
 					"param2": {
@@ -124,7 +125,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &NumberValidator{},
+							NumberArray: &NumberArrayValidator{},
 						},
 					},
 				},
@@ -156,7 +157,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &StringValidator{},
+							String: &parameter.StringValidator{},
 						},
 					},
 					"param2": {
@@ -179,7 +180,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &NumberValidator{},
+							NumberArray: &NumberArrayValidator{},
 						},
 					},
 				},
@@ -210,7 +211,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &StringValidator{},
+							String: &parameter.StringValidator{},
 						},
 					},
 					"param2": {
@@ -261,7 +262,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &StringValidator{},
+							String: &parameter.StringValidator{},
 						},
 					},
 					"param2": {
@@ -314,7 +315,7 @@ func TestSchema_Validate(t *testing.T) {
 						Description: "String",
 						Example:     "Test",
 						Validation: ParameterValidation{
-							String: &StringValidator{},
+							String: &parameter.StringValidator{},
 						},
 					},
 					"param2": {

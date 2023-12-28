@@ -1,6 +1,7 @@
 package parameter
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 )
@@ -41,4 +42,48 @@ func (p StringValidator) Validate(value string) error {
 		}
 	}
 	return fmt.Errorf("value [%s] not in %v", value, p.OneOf)
+}
+
+type StringArrayValidator struct {
+	Values  []string `json:"values"`
+	RegEx   *string  `json:"regex"`
+	Present []string `json:"present"`
+}
+
+func (s StringArrayValidator) Validate(values []string) error {
+	if len(s.Values) > 0 {
+		if len(s.Values) != len(values) {
+			return errors.New("validator values lenght must match values length")
+		}
+		for i := range s.Values {
+			if s.Values[i] != values[i] {
+				return fmt.Errorf("value [%s] does not equal %s", values[i], s.Values[i])
+			}
+		}
+	}
+	if s.RegEx != nil {
+		reqEx, err := regexp.Compile(*s.RegEx)
+		if err != nil {
+			return fmt.Errorf("reg exp [%s] error %w", *s.RegEx, err)
+		}
+		for _, value := range values {
+			if !reqEx.MatchString(value) {
+				return fmt.Errorf("value [%s] does not match reg exp %s", value, *s.RegEx)
+			}
+		}
+	}
+	if len(s.Present) == 0 {
+		return nil
+	}
+	vset := map[string]struct{}{}
+	for _, v := range values {
+		vset[v] = struct{}{}
+	}
+	for _, p := range s.Present {
+		if _, has := vset[p]; !has {
+			return fmt.Errorf("value [%s] not in %v", p, values)
+		}
+	}
+
+	return nil
 }

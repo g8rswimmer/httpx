@@ -4,45 +4,71 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
 type ParameterValidation struct {
-	String  *StringValidator  `json:"string_validator"`
-	Number  *NumberValidator  `json:"number_validator"`
-	Time    *TimeValidator    `json:"time_validator"`
-	Boolean *BooleanValidator `json:"boolean_validator"`
+	String      *parameter.StringValidator      `json:"string_validator"`
+	Number      *NumberValidator                `json:"number_validator"`
+	Time        *parameter.TimeValidator        `json:"time_validator"`
+	Boolean     *BooleanValidator               `json:"boolean_validator"`
+	StringArray *parameter.StringArrayValidator `json:"string_array_validator"`
+	TimeArray   *parameter.TimeArrayValidator   `json:"time_array_validator"`
+	NumberArray *NumberArrayValidator           `json:"number_array_validator"`
 }
 
-func (p ParameterValidation) Validate(values []string) error {
-	if err := p.validator(); err != nil {
+func (p ParameterValidation) ValidateValues(values []string) error {
+	if err := p.validatorValues(); err != nil {
 		return err
 	}
-	for _, v := range values {
-		switch {
-		case p.String != nil:
-			if err := p.String.Validate(v); err != nil {
-				return err
-			}
-		case p.Number != nil:
-			if err := p.Number.Validate(v); err != nil {
-				return err
-			}
-		case p.Time != nil:
-			if err := p.Time.Validate(v); err != nil {
-				return err
-			}
-		case p.Boolean != nil:
-			if err := p.Boolean.Validate(v); err != nil {
-				return err
-			}
-		default:
-			return errors.New("unable to validate the parameter")
+	switch {
+	case p.StringArray != nil:
+		if err := p.StringArray.Validate(values); err != nil {
+			return err
 		}
+	case p.NumberArray != nil:
+		if err := p.NumberArray.Validate(values); err != nil {
+			return err
+		}
+	case p.TimeArray != nil:
+		if err := p.TimeArray.Validate(values); err != nil {
+			return err
+		}
+	default:
+		return errors.New("unable to validate the parameter")
 	}
 	return nil
 }
 
-func (p ParameterValidation) validator() error {
+func (p ParameterValidation) ValidateValue(value string) error {
+	if err := p.validatorValue(); err != nil {
+		return err
+	}
+	switch {
+	case p.String != nil:
+		if err := p.String.Validate(value); err != nil {
+			return err
+		}
+	case p.Number != nil:
+		if err := p.Number.Validate(value); err != nil {
+			return err
+		}
+	case p.Time != nil:
+		if err := p.Time.Validate(value); err != nil {
+			return err
+		}
+	case p.Boolean != nil:
+		if err := p.Boolean.Validate(value); err != nil {
+			return err
+		}
+	default:
+		return errors.New("unable to validate the parameter")
+	}
+	return nil
+}
+
+func (p ParameterValidation) validatorValue() error {
 	found := false
 	if p.String != nil {
 		found = true
@@ -71,6 +97,76 @@ func (p ParameterValidation) validator() error {
 	return nil
 }
 
+func (p ParameterValidation) validatorValues() error {
+	found := false
+	if p.StringArray != nil {
+		found = true
+	}
+	if p.NumberArray != nil {
+		if found {
+			return errors.New("parameter validation can't have more than one validator")
+		}
+		found = true
+	}
+	if p.TimeArray != nil {
+		if found {
+			return errors.New("parameter validation can't have more than one validator")
+		}
+		found = true
+	}
+	if !found {
+		return errors.New("paramter validation must have one validation")
+	}
+	return nil
+}
+
+func (p ParameterValidation) validator() error {
+	found := false
+	if p.String != nil {
+		found = true
+	}
+	if p.Number != nil {
+		if found {
+			return errors.New("parameter validation can't have more than one validator")
+		}
+		found = true
+	}
+	if p.Time != nil {
+		if found {
+			return errors.New("parameter validation can't have more than one validator")
+		}
+		found = true
+	}
+	if p.Boolean != nil {
+		if found {
+			return errors.New("parameter validation can't have more than one validator")
+		}
+		found = true
+	}
+	if p.StringArray != nil {
+		if found {
+			return errors.New("parameter validation can't have more than one validator")
+		}
+		found = true
+	}
+	if p.NumberArray != nil {
+		if found {
+			return errors.New("parameter validation can't have more than one validator")
+		}
+		found = true
+	}
+	if p.TimeArray != nil {
+		if found {
+			return errors.New("parameter validation can't have more than one validator")
+		}
+		found = true
+	}
+	if !found {
+		return errors.New("paramter validation must have one validation")
+	}
+	return nil
+}
+
 type ParameterProperties struct {
 	Description          string              `json:"description"`
 	Example              string              `json:"example"`
@@ -80,18 +176,18 @@ type ParameterProperties struct {
 }
 
 func (p ParameterProperties) Validate(value string) error {
-	var values []string
 	switch {
 	case len(value) == 0:
 		return nil
 	case p.InlineArray:
-		values = strings.Split(value, p.InlineArraySeperator)
+		values := strings.Split(value, p.InlineArraySeperator)
+		if err := p.Validation.ValidateValues(values); err != nil {
+			return fmt.Errorf("query valiation: %w", err)
+		}
 	default:
-		values = []string{value}
-	}
-
-	if err := p.Validation.Validate(values); err != nil {
-		return fmt.Errorf("query valiation: %w", err)
+		if err := p.Validation.ValidateValue(value); err != nil {
+			return fmt.Errorf("query valiation: %w", err)
+		}
 	}
 
 	return nil
