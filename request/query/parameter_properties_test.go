@@ -178,7 +178,7 @@ func TestParameterProperties_Validate(t *testing.T) {
 				InlineArray:          true,
 				InlineArraySeperator: ",",
 				Validation: ParameterValidation{
-					Number: &NumberValidator{},
+					NumberArray: &NumberArrayValidator{},
 				},
 			},
 			args: args{

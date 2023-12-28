@@ -46,7 +46,7 @@
             "inline_array": true,
             "inline_array_seperator": ",",
             "validation": {
-                "string_validator":{}
+                "string_array_validator":{}
             }
         }
     }

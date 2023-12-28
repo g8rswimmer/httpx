@@ -125,7 +125,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &NumberValidator{},
+							NumberArray: &NumberArrayValidator{},
 						},
 					},
 				},
@@ -180,7 +180,7 @@ func TestSchema_Validate(t *testing.T) {
 						InlineArray:          true,
 						InlineArraySeperator: ",",
 						Validation: ParameterValidation{
-							Number: &NumberValidator{},
+							NumberArray: &NumberArrayValidator{},
 						},
 					},
 				},
