@@ -6,24 +6,24 @@ import (
 	"github.com/g8rswimmer/httpx/request/parameter"
 )
 
-type StringValidator struct {
-	parameter.StringValidator
+type TimeValidator struct {
+	parameter.TimeValidator
 }
 
-func (s StringValidator) Validate(value any) error {
+func (t TimeValidator) Validate(value any) error {
 	switch v := value.(type) {
 	case string:
-		return s.StringValidator.Validate(v)
+		return t.TimeValidator.Validate(v)
 	default:
 		return fmt.Errorf("value is not a string [%T]", value)
 	}
 }
 
-type StringArrayValidator struct {
-	parameter.StringArrayValidator
+type TimeArrayValidator struct {
+	parameter.TimeArrayValidator
 }
 
-func (s StringArrayValidator) Validate(value any) error {
+func (s TimeArrayValidator) Validate(value any) error {
 	var strArr []string
 	switch arr := value.(type) {
 	case []any:
@@ -39,5 +39,5 @@ func (s StringArrayValidator) Validate(value any) error {
 	default:
 		return fmt.Errorf("value is an array [%T]", arr)
 	}
-	return s.StringArrayValidator.Validate(strArr)
+	return s.TimeArrayValidator.Validate(strArr)
 }
