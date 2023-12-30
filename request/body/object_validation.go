@@ -100,6 +100,12 @@ func propertyValidator(validation ParameterValidation) (validator, error) {
 		}
 		val = validation.Object
 	}
+	if validation.ObjectArray != nil {
+		if val != nil {
+			return nil, errors.New("mulitple validators not allowed")
+		}
+		val = validation.ObjectArray
+	}
 	if val == nil {
 		return nil, errors.New("validator must be present")
 	}
