@@ -1,4 +1,4 @@
-package body
+package jbody
 
 type ParameterValidation struct {
 	Object      *ObjectValidator      `json:"object_validator"`

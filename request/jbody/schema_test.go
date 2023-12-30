@@ -1,4 +1,4 @@
-package body
+package jbody
 
 import (
 	"net/http"
