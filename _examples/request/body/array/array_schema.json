@@ -1,0 +1,47 @@
+{
+    "title": "Schema Example",
+    "description": "Overivew of the schema and validaiton for a HTTP request body",
+    "body": {
+        "object_array": {
+            "object": {
+                "required_fields":{
+                    "one_of": [
+                        ["street_1", "city", "state"],
+                        ["street_1", "zip"]
+                    ]
+                },
+                "parameters": {
+                    "street_1":{
+                        "validation":{
+                            "string_validator":{}
+                        }
+                    },
+                    "street_2":{
+                        "validation":{
+                            "string_validator":{}
+                        }
+                    },
+                    "city": {
+                        "validation":{
+                            "string_validator":{}
+                        }
+                    },
+                    "state":{
+                        "validation":{
+                            "string_validator":{
+                                "regex": "^[A-Za-z]{2}$"
+                            }
+                        }
+                    },
+                    "zip": {
+                        "validation":{
+                            "string_validator":{
+                                "regex": "^[0-9]{5}$"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
