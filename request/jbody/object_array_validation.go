@@ -24,7 +24,6 @@ func (o ObjectArrayValidator) Validate(value any) error {
 	default:
 		return fmt.Errorf("value is not an object array [%T]", value)
 	}
-
 	for i, obj := range objs {
 		if err := o.Object.Validate(obj); err != nil {
 			return fmt.Errorf("object array error idx [%d]: %w", i, err)
