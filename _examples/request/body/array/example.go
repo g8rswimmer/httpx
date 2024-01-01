@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -8,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/g8rswimmer/httpx/request/jbody"
+	"github.com/g8rswimmer/httpx/request/rerror"
 )
 
 func main() {
@@ -65,9 +68,15 @@ func RequestJBodyFail(schema jbody.Schema) {
 	req := httptest.NewRequest(http.MethodPost, "http://www.test.com/schema", strings.NewReader(b))
 
 	err := schema.Validate(req)
-	if err == nil {
+	var schemaErr *rerror.SchemaErr
+	switch {
+	case err == nil:
+		panic("error expected for the request query fail")
+	case errors.As(err, &schemaErr):
+		enc, _ := json.MarshalIndent(schemaErr, "", "  ")
+		fmt.Println("HTTP request body validated: failure")
+		fmt.Println(string(enc))
+	default:
 		panic(err)
 	}
-	fmt.Println(err.Error())
-	fmt.Println("HTTP request body validated: failed")
 }

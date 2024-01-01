@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/g8rswimmer/httpx/request/rerror"
 )
 
 type Schema struct {
@@ -16,10 +18,10 @@ type Schema struct {
 func (s Schema) Validate(req *http.Request) error {
 	var body any
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return fmt.Errorf("schema body json decode: %w", err)
+		return rerror.SchemaFromError("request json body validation", fmt.Errorf("schema body json decode: %w", err))
 	}
 	if err := s.Body.Validate(body); err != nil {
-		return fmt.Errorf("schema body err: %w", err)
+		return rerror.SchemaFromError("request json body validation", err)
 	}
 	return nil
 }
