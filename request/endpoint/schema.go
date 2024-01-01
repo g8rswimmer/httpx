@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/g8rswimmer/httpx/request/rerror"
 )
 
 type SchemaError struct {
@@ -32,30 +34,28 @@ type Schema struct {
 
 func (s Schema) Validate(req *http.Request) error {
 	if req.Method != s.Method {
-		return &SchemaError{
-			Msg: fmt.Sprintf("request method [%s] does not match expected method [%s]", req.Method, s.Method),
-		}
+		return rerror.SchemaFromError("request ednpoint validation", fmt.Errorf("request method [%s] does not match expected method [%s]", req.Method, s.Method))
 	}
 	reqPaths := strings.Split(req.URL.Path, "/")
 	schemaPaths := strings.Split(s.Endpoint, "/")
 	if len(reqPaths) != len(schemaPaths) {
-		return &SchemaError{
-			Msg: "request paths sizedo not match",
-		}
+		return rerror.SchemaFromError("request ednpoint validation", fmt.Errorf("request paths size do not match expected [%d] :: actual[%d]", len(schemaPaths), len(reqPaths)))
 	}
+
 	for i := range schemaPaths {
 		if pv, has := s.PathVariables[schemaPaths[i]]; has {
 			if err := pv.Validate(reqPaths[i]); err != nil {
-				return &SchemaError{
-					Msg: fmt.Sprintf("path variable [%s]: %s", reqPaths[i], err.Error()),
+				parameterErr := &rerror.ParameterErr{
+					Parameters: map[string]string{
+						reqPaths[i]: err.Error(),
+					},
 				}
+				return rerror.SchemaFromError("request ednpoint validation", parameterErr)
 			}
 			continue
 		}
 		if schemaPaths[i] != reqPaths[i] {
-			return &SchemaError{
-				Msg: fmt.Sprintf("request path [%s] does not match [%s]", reqPaths[i], schemaPaths[i]),
-			}
+			return rerror.SchemaFromError("request ednpoint validation", fmt.Errorf("request path [%s] does not match [%s]", reqPaths[i], schemaPaths[i]))
 		}
 	}
 	return nil
