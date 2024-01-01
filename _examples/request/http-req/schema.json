@@ -1,0 +1,181 @@
+{
+    "endpoint": {
+        "title": "Update User",
+        "description": "This endpoint updates the user from the user id, UUIDv4",
+        "method": "PATCH",
+        "endpoint": "/schema/example/{id}",
+        "path_variables": {
+            "{id}": {
+                "validation": {
+                    "string_validator": {
+                        "regex": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$"
+                    }
+                }
+            }
+        }
+    },
+    "query": {
+        "title": "Update User",
+        "description": "Denotes the business unit of the user",
+        "required_fields": {
+            "one_of": [
+                ["bu"]
+            ]
+        },
+        "parameters": {
+            "bu": {
+                "description": "The business unit",
+                "example": "bu_2",
+                "validation": {
+                    "string_validator":{
+                        "one_of": ["bu_1", "bu_2", "bu_3"]
+                    }
+                }
+            }
+        }       
+    },
+    "body":{
+        "title": "User Update",
+        "description": "User fields that can be updated",
+        "body": {
+            "object": {
+                "required_fields":{
+                    "one_of": [
+                    ]
+                },
+                "parameters": {
+                    "first_name": {
+                        "validation":{
+                            "string_validator":{}
+                        }
+                    },
+                    "last_name": {
+                        "validation":{
+                            "string_validator":{}
+                        }
+                    },
+                    "alias":{
+                        "validation":{
+                            "string_array_validator":{}
+                        }
+                    },
+                    "date_of_birth": {
+                        "validation":{
+                            "time_validator":{
+                                "format": "2006-01-02"
+                            }
+                        }
+                    },
+                    "home_address":{
+                        "validation":{
+                            "object_validator":{
+                                "required_fields":{
+                                    "one_of": [
+                                        ["street_1", "city", "state"],
+                                        ["street_1", "zip"]
+                                    ]
+                    
+                                },
+                                "parameters": {
+                                    "street_1":{
+                                        "validation":{
+                                            "string_validator":{}
+                                        }
+                                    },
+                                    "street_2":{
+                                        "validation":{
+                                            "string_validator":{}
+                                        }
+                                    },
+                                    "city": {
+                                        "validation":{
+                                            "string_validator":{}
+                                        }
+                                    },
+                                    "state":{
+                                        "validation":{
+                                            "string_validator":{
+                                                "regex": "^[A-Za-z]{2}$"
+                                            }
+                                        }
+                                    },
+                                    "zip": {
+                                        "validation":{
+                                            "string_validator":{
+                                                "regex": "^[0-9]{5}$"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "other_addresses": {
+                        "validation":{
+                            "object_array_validator":{
+                                "object": {
+                                    "required_fields":{
+                                        "one_of": [
+                                            ["street_1", "city", "state"],
+                                            ["street_1", "zip"]
+                                        ]
+                                    },
+                                    "parameters": {
+                                        "street_1":{
+                                            "validation":{
+                                                "string_validator":{}
+                                            }
+                                        },
+                                        "street_2":{
+                                            "validation":{
+                                                "string_validator":{}
+                                            }
+                                        },
+                                        "city": {
+                                            "validation":{
+                                                "string_validator":{}
+                                            }
+                                        },
+                                        "state":{
+                                            "validation":{
+                                                "string_validator":{
+                                                    "regex": "^[A-Za-z]{2}$"
+                                                }
+                                            }
+                                        },
+                                        "zip": {
+                                            "validation":{
+                                                "string_validator":{
+                                                    "regex": "^[0-9]{5}$"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "phone_number": {
+                        "validation":{
+                            "string_validator":{
+                                "regex": "^\\+[1-9]\\d{1,14}$"
+                            }
+                        }
+                    },
+                    "married": {
+                        "validation":{
+                            "boolean_validator":{}
+                        }
+                    },
+                    "email": {
+                        "validation":{
+                            "string_validator":{
+                                "regex": "^[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,4}$"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
