@@ -21,12 +21,16 @@ type Schema struct {
 
 func (s Schema) Validate(req *http.Request) error {
 	if req.Method != s.Method {
-		return rerror.SchemaFromError("request ednpoint validation", fmt.Errorf("request method [%s] does not match expected method [%s]", req.Method, s.Method))
+		return rerror.SchemaFromError("request endpoint validation", fmt.Errorf("request method [%s] does not match expected method [%s]", req.Method, s.Method))
 	}
+	return s.ValidateEndpoint(req)
+}
+
+func (s Schema) ValidateEndpoint(req *http.Request) error {
 	reqPaths := strings.Split(req.URL.Path, "/")
 	schemaPaths := strings.Split(s.Endpoint, "/")
 	if len(reqPaths) != len(schemaPaths) {
-		return rerror.SchemaFromError("request ednpoint validation", fmt.Errorf("request paths size do not match expected [%d] :: actual[%d]", len(schemaPaths), len(reqPaths)))
+		return rerror.SchemaFromError("request endpoint validation", fmt.Errorf("request paths size do not match expected [%d] :: actual[%d]", len(schemaPaths), len(reqPaths)))
 	}
 
 	for i := range schemaPaths {
@@ -37,12 +41,12 @@ func (s Schema) Validate(req *http.Request) error {
 						reqPaths[i]: err.Error(),
 					},
 				}
-				return rerror.SchemaFromError("request ednpoint validation", parameterErr)
+				return rerror.SchemaFromError("request endpoint validation", parameterErr)
 			}
 			continue
 		}
 		if schemaPaths[i] != reqPaths[i] {
-			return rerror.SchemaFromError("request ednpoint validation", fmt.Errorf("request path [%s] does not match [%s]", reqPaths[i], schemaPaths[i]))
+			return rerror.SchemaFromError("request endpoint validation", fmt.Errorf("request path [%s] does not match [%s]", reqPaths[i], schemaPaths[i]))
 		}
 	}
 	return nil
