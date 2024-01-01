@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/g8rswimmer/httpx/request/field"
-	"github.com/g8rswimmer/httpx/request/parameter"
+	"github.com/g8rswimmer/httpx/request/internal/field"
+	"github.com/g8rswimmer/httpx/request/internal/parameter"
 )
 
 func TestSchemaModelValidator(t *testing.T) {

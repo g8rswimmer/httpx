@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/g8rswimmer/httpx/request/query"
+	"github.com/g8rswimmer/httpx/request/rerror"
 )
 
 func main() {
@@ -52,7 +53,7 @@ func RequestQueryFail(schema query.Schema) {
 	req.URL.RawQuery = q.Encode()
 
 	err := schema.Validate(req)
-	var schemaErr *query.SchemaError
+	var schemaErr *rerror.SchemaErr
 	switch {
 	case err == nil:
 		panic("error expected for the request query fail")

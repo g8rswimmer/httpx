@@ -4,7 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/g8rswimmer/httpx/request/field"
+	"github.com/g8rswimmer/httpx/request/internal/field"
+	"github.com/g8rswimmer/httpx/request/rerror"
 )
 
 type validator interface {
@@ -25,29 +26,32 @@ func (o ObjectValidator) Validate(value any) error {
 		return fmt.Errorf("value is not an object [%T]", value)
 	}
 
-	fields := fieldsFromObject(obj)
+	fields := field.Set(obj)
+
 	if err := o.RequiredFields.Validate(fields); err != nil {
-		return fmt.Errorf("object validator required fields: %w", err)
+		return err
 	}
 
-	extraFields := []string{}
-	for field := range fields {
-		if _, has := o.Parameters[field]; !has {
-			extraFields = append(extraFields, field)
-		}
-	}
-	if len(extraFields) > 0 {
-		return fmt.Errorf("extra fields present in object %v", extraFields)
+	if err := field.Validate(fields, o.Parameters); err != nil {
+		return err
 	}
 
 	for field, value := range obj {
 		properties := o.Parameters[field]
 		val, err := propertyValidator(properties.Validation)
 		if err != nil {
-			return fmt.Errorf("object validator [%s]: %w", field, err)
+			return &rerror.ParameterErr{
+				Parameters: map[string]string{
+					field: fmt.Sprintf("object validator: %v", err),
+				},
+			}
 		}
 		if err := val.Validate(value); err != nil {
-			return fmt.Errorf("object validation [%s]: %w", field, err)
+			return &rerror.ParameterErr{
+				Parameters: map[string]string{
+					field: err.Error(),
+				},
+			}
 		}
 	}
 	return nil
@@ -110,12 +114,4 @@ func propertyValidator(validation ParameterValidation) (validator, error) {
 		return nil, errors.New("validator must be present")
 	}
 	return val, nil
-}
-
-func fieldsFromObject(obj map[string]any) map[string]struct{} {
-	fields := map[string]struct{}{}
-	for field := range obj {
-		fields[field] = struct{}{}
-	}
-	return fields
 }

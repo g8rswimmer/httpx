@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/g8rswimmer/httpx/request/parameter"
+	"github.com/g8rswimmer/httpx/request/internal/parameter"
 )
 
 func TestNumberValidator_Validate(t *testing.T) {

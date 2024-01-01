@@ -3,7 +3,7 @@ package endpoint
 import (
 	"testing"
 
-	"github.com/g8rswimmer/httpx/request/parameter"
+	"github.com/g8rswimmer/httpx/request/internal/parameter"
 )
 
 func TestPathVariable_Validate(t *testing.T) {
