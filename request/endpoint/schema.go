@@ -11,19 +11,6 @@ import (
 	"github.com/g8rswimmer/httpx/request/rerror"
 )
 
-type SchemaError struct {
-	Msg string `json:"message"`
-}
-
-func (s SchemaError) Error() string {
-	return s.Msg
-}
-
-func (s *SchemaError) Is(target error) bool {
-	_, ok := target.(*SchemaError)
-	return ok
-}
-
 type Schema struct {
 	Title         string                  `json:"title"`
 	Description   string                  `json:"description"`
