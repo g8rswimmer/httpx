@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/g8rswimmer/httpx/request/field"
-	"github.com/g8rswimmer/httpx/request/parameter"
+	"github.com/g8rswimmer/httpx/request/internal/field"
+	"github.com/g8rswimmer/httpx/request/internal/parameter"
 )
 
 func TestObjectValidator_Validate_Success(t *testing.T) {

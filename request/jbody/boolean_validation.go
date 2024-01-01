@@ -3,7 +3,7 @@ package jbody
 import (
 	"fmt"
 
-	"github.com/g8rswimmer/httpx/request/parameter"
+	"github.com/g8rswimmer/httpx/request/internal/parameter"
 )
 
 type BooleanValidator struct {

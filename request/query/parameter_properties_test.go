@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/g8rswimmer/httpx/request/parameter"
+	"github.com/g8rswimmer/httpx/request/internal/parameter"
 )
 
 func TestSchemaModelParameterPropertiesValidator(t *testing.T) {

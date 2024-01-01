@@ -1,6 +1,6 @@
 package endpoint
 
-import "github.com/g8rswimmer/httpx/request/parameter"
+import "github.com/g8rswimmer/httpx/request/internal/parameter"
 
 type StringValidator struct {
 	parameter.StringValidator
