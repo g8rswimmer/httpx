@@ -23,11 +23,11 @@ func (s Schema) Validate(req *http.Request) error {
 	if req.Method != s.Method {
 		return rerror.SchemaFromError("request endpoint validation", fmt.Errorf("request method [%s] does not match expected method [%s]", req.Method, s.Method))
 	}
-	return s.ValidateEndpoint(req)
+	return s.ValidateEndpoint(req.URL.Path)
 }
 
-func (s Schema) ValidateEndpoint(req *http.Request) error {
-	reqPaths := strings.Split(req.URL.Path, "/")
+func (s Schema) ValidateEndpoint(path string) error {
+	reqPaths := strings.Split(path, "/")
 	schemaPaths := strings.Split(s.Endpoint, "/")
 	if len(reqPaths) != len(schemaPaths) {
 		return rerror.SchemaFromError("request endpoint validation", fmt.Errorf("request paths size do not match expected [%d] :: actual[%d]", len(schemaPaths), len(reqPaths)))
