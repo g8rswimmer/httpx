@@ -19,20 +19,20 @@ type Schema struct {
 	Parameters     map[string]ParameterProperties `json:"parameters"`
 }
 
-func (s Schema) Validate(req *http.Request) error {
+func (s Schema) Validate(req *http.Request) (url.Values, error) {
 	values, err := url.ParseQuery(req.URL.RawQuery)
 	if err != nil {
-		return rerror.SchemaFromError("request query validation", err)
+		return nil, rerror.SchemaFromError("request query validation", err)
 	}
 
 	if err := field.Validate(values, s.Parameters); err != nil {
-		return rerror.SchemaFromError("request query validation", err)
+		return nil, rerror.SchemaFromError("request query validation", err)
 	}
 
 	set := field.Set(values)
 
 	if err := s.RequiredFields.Validate(set); err != nil {
-		return rerror.SchemaFromError("request query validation", err)
+		return nil, rerror.SchemaFromError("request query validation", err)
 	}
 
 	parameterErr := &rerror.ParameterErr{
@@ -44,7 +44,7 @@ func (s Schema) Validate(req *http.Request) error {
 			parameterErr.Add(key, err.Error())
 		}
 	}
-	return rerror.SchemaFromError("request query validation", parameterErr)
+	return values, rerror.SchemaFromError("request query validation", parameterErr)
 }
 
 func SchemaFromJSON(reader io.Reader) (Schema, error) {
