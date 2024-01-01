@@ -43,7 +43,7 @@ func RequestJBodySuccess(schema jbody.Schema) {
 
 	req := httptest.NewRequest(http.MethodPost, "http://www.test.com/schema", strings.NewReader(b))
 
-	if err := schema.Validate(req); err != nil {
+	if _, err := schema.Validate(req); err != nil {
 		panic(err)
 	}
 
@@ -67,7 +67,7 @@ func RequestJBodyFail(schema jbody.Schema) {
 
 	req := httptest.NewRequest(http.MethodPost, "http://www.test.com/schema", strings.NewReader(b))
 
-	err := schema.Validate(req)
+	_, err := schema.Validate(req)
 	var schemaErr *rerror.SchemaErr
 	switch {
 	case err == nil:
