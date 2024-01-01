@@ -1,6 +1,10 @@
 package field
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/g8rswimmer/httpx/request/rerror"
+)
 
 type Required struct {
 	OneOf   [][]string          `json:"one_of"`
@@ -35,7 +39,10 @@ func findOneOf(oneOf [][]string, fields map[string]struct{}) error {
 			return nil
 		}
 	}
-	return fmt.Errorf("one of the combinations are required %v", oneOf)
+	return &rerror.FieldErr{
+		Msg:   "one of the field combinations are requried",
+		OneOf: oneOf,
+	}
 }
 
 func findIfPresent(present map[string][]string, fields map[string]struct{}) error {
@@ -47,7 +54,12 @@ func findIfPresent(present map[string][]string, fields map[string]struct{}) erro
 			continue
 		}
 		if err := find(required, fields); err != nil {
-			return fmt.Errorf("if [%s] is present required fields %v", field, required)
+			return &rerror.FieldErr{
+				Msg: "Reuired fields not present",
+				Present: map[string][]string{
+					field: required,
+				},
+			}
 		}
 	}
 	return nil
