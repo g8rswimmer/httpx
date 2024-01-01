@@ -38,7 +38,7 @@ func RequestQuerySuccess(schema query.Schema) {
 	q.Add("children", "Sean,Jessica")
 	req.URL.RawQuery = q.Encode()
 
-	if err := schema.Validate(req); err != nil {
+	if _, err := schema.Validate(req); err != nil {
 		panic(err)
 	}
 	fmt.Println("HTTP request query validated: success")
@@ -52,7 +52,7 @@ func RequestQueryFail(schema query.Schema) {
 	q.Add("age", "16")
 	req.URL.RawQuery = q.Encode()
 
-	err := schema.Validate(req)
+	_, err := schema.Validate(req)
 	var schemaErr *rerror.SchemaErr
 	switch {
 	case err == nil:

@@ -15,15 +15,15 @@ type Schema struct {
 	Body        Body   `json:"body"`
 }
 
-func (s Schema) Validate(req *http.Request) error {
+func (s Schema) Validate(req *http.Request) (any, error) {
 	var body any
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return rerror.SchemaFromError("request json body validation", fmt.Errorf("schema body json decode: %w", err))
+		return nil, rerror.SchemaFromError("request json body validation", fmt.Errorf("schema body json decode: %w", err))
 	}
 	if err := s.Body.Validate(body); err != nil {
-		return rerror.SchemaFromError("request json body validation", err)
+		return nil, rerror.SchemaFromError("request json body validation", err)
 	}
-	return nil
+	return body, nil
 }
 
 func SchemaFromJSON(reader io.Reader) (Schema, error) {

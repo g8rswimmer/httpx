@@ -366,7 +366,7 @@ func TestSchema_Validate(t *testing.T) {
 				RequiredFields: tt.fields.Required,
 				Parameters:     tt.fields.Parameters,
 			}
-			if err := s.Validate(tt.args.req); (err != nil) != tt.wantErr {
+			if _, err := s.Validate(tt.args.req); (err != nil) != tt.wantErr {
 				t.Errorf("Schema.Validate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
